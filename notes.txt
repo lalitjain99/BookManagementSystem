@@ -1,0 +1,30 @@
+#models.py
+line 14 camel case
+line 17 use proper naming 
+
+
+get vs put vs post---> I will explain
+
+need to create a exception class
+
+
+if you have 4 cores and 5 request comes in how will it serve?
+queueing in fast api
+
+
+io call (call between 2 servers ex backend --> database)
+
+gil (global interperator lock)
+io vs compute
+
+write a demo prog
+
+
+database run
+models
+api's
+
+get req-> query param, path param
+
+
+post req-> body param
