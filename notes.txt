@@ -8,13 +8,13 @@ get vs put vs post---> I will explain
 need to create a exception class
 
 
-if you have 4 cores and 5 request comes in how will it serve?
+if you have 4 cores in cpu and 5 request comes in how will it serve?
 queueing in fast api
 
 
 io call (call between 2 servers ex backend --> database)
 
-gil (global interperator lock)
+gil (global Interpreter lock)
 io vs compute
 
 write a demo prog

@@ -4,6 +4,7 @@
         "fastapi",
         "pydantic",
         "sessionmaker",
-        "sqlalchemy"
+        "sqlalchemy",
+        "uvicorn"
     ]
 }
