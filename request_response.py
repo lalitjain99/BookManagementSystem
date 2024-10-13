@@ -22,3 +22,13 @@ class CreateReview(BaseModel):
     user_id: int
     review_text: str
     rating: int
+
+class User(BaseModel):
+    id: Optional[int] = None
+    user_name: str
+    email: Optional[str]
+    password: str
+
+class LoginRequest(BaseModel):
+    user_name: str
+    password: str

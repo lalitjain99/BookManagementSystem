@@ -3,7 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.future import select
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Text
+import bcrypt
 
 #Base class
 sqlalchemy_base = declarative_base()
@@ -26,3 +27,12 @@ class ReviewSQL(sqlalchemy_base):
     review_text = Column(String)
     rating = Column(Integer)
 
+class UserSQL(sqlalchemy_base):
+    __tablename__ = 'User'
+    id = Column(Integer, primary_key=True)
+    user_name = Column(Text)
+    password = Column(Text)
+
+    # def verify_password(self, password):
+    #     pwhash = bcrypt.hashpw(password, self.password)
+    #     return self.password == pwhash

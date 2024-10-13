@@ -1,5 +1,5 @@
 import asyncio
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException,Depends
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.future import select
@@ -9,10 +9,12 @@ from sqlalchemy import func
 import asyncpg
 from models import BookSQL,ReviewSQL
 import uvicorn
-from request_response import CreateBook, CreateReview, UpdateBook
+from request_response import CreateBook, CreateReview, UpdateBook, User
+from auth import get_current_user, verify_token
+from login import login_router
 
 app = FastAPI()
-
+app.include_router(login_router)
 #Database connection and session setup
 # DATABASE_URL = "postgresql+asyncpg://postgres:admin@123@localhost/bookstore"
 DATABASE_URL = "postgresql+asyncpg://postgres:admin%40123@localhost/bookstore"
@@ -29,6 +31,7 @@ session_local = sessionmaker(bind=engine,class_=AsyncSession,expire_on_commit=Fa
 
 
 ############################################  API's ############################################
+
 
 #1. Add a new book --> done
 @app.post("/books")
@@ -48,7 +51,7 @@ async def create_book(book: CreateBook):
     
 #2. Retrieve all books --done
 @app.get("/books")
-async def get_all_books():
+async def get_all_books(User: str = Depends(verify_token)):
     async with session_local() as session:
         result = await session.execute(select (BookSQL))
         books = result.scalar()
@@ -155,6 +158,7 @@ async def get_summary_by_book_id(book_id: int):
         review_result = await session.execute(select(func.avg(ReviewSQL.rating)).where(ReviewSQL.book_id == book_id))
         avg_rating = review_result.scalar()
         return {"summary": book.summary,"Average_rating": avg_rating}
+
     
 if __name__ == "__main__":
     # asyncio.run(test_connection())
