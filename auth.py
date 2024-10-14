@@ -25,34 +25,43 @@ async def get_db():
 #         yield db
 #     finally:
 #         db.close()
+secret_key = secrets.token_urlsafe(32)
 #JWT Token Generation
 def generate_access_token(user: User):
     print(user)
     expire_time = datetime.now() + timedelta(minutes=30)
     to_encode = {
         "exp": expire_time,
-        "sub": user['id'],
+        "sub": str(user['id']),
     }
-    secret_key = secrets.token_urlsafe(32)
+    
+    print("Secret_key in login",secret_key)
+    print(f"Payload to encode: {to_encode}")
     encoded_jwt = jwt.encode(to_encode, secret_key, algorithm="HS256")
+    print(f"Encoded JWT: {encoded_jwt}")
     return encoded_jwt
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-SECRET_KEY = secrets.token_hex(32)
+SECRET_KEY = secret_key
 ALGORITHM = "HS256"
 def verify_token(token: str = Depends(oauth2_scheme)):
-    print("inside verify token")
     try:
+        print(f"encoded token received {token}")
+        print(f"Secret key in verification {SECRET_KEY}")
+        print(ALGORITHM)
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        print(payload)
         user_name: str = payload.get("sub")
         if user_name is None:
             raise HTTPException(
                 status_code=401,
-                detail="Could not validate credentials",
+                detail="Could not validate credentials due to User",
                 headers={"WWW-Authenticate": "Bearer"},
             )
         return user_name
-    except JWTError:
+    except Exception as e:
+        print(e)
+    
         raise HTTPException(
             status_code=401,
             detail="Could not validate credentials",

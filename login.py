@@ -21,4 +21,4 @@ async def login(login_data: LoginRequest, db: AsyncSession = Depends(get_db)):
     #     raise HTTPException(status_code=401, detail="Incorrect username or password")
 
     access_token  = generate_access_token(user={"username": user.user_name,"id":user.id})
-    return {"access_token": access_token}
+    return {"access_token": access_token,"token_type": "Bearer"}
